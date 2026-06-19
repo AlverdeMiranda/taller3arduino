@@ -1,18 +1,30 @@
-const int buttonPin = 2;       // Pin digital del pulsador
-int lastButtonState = HIGH;    // Guarda el estado anterior del botón
+const int button1Pin = 2;      // Pulsador 1 en Pin 2 (Seguro)
+const int button2Pin = 4;      // Pulsador 2 en Pin 4 (Seguro)
+
+int lastButton1State = HIGH;   // Estado anterior del botón 1
+int lastButton2State = HIGH;   // Estado anterior del botón 2
 
 void setup() {
-  pinMode(buttonPin, INPUT_PULLUP); // Activa la resistencia interna (mantiene el pin en 5V)
-  Serial.begin(9600);               // Inicia el puerto serie a 9600 baudios
+  pinMode(button1Pin, INPUT_PULLUP); // Resistencia pull-up para botón 1
+  pinMode(button2Pin, INPUT_PULLUP); // Resistencia pull-up para botón 2
+  Serial.begin(9600);                // Puerto serie a 9600
 }
 
 void loop() {
-  int buttonState = digitalRead(buttonPin); // Lee el estado del pulsador
+  int button1State = digitalRead(button1Pin); // Lee el botón 1 (Pin 2)
+  int button2State = digitalRead(button2Pin); // Lee el botón 2 (Pin 4)
 
-  // Si el botón pasa de NO presionado (HIGH) a PRESIONADO (LOW)
-  if (buttonState == LOW && lastButtonState == HIGH) {
-    Serial.print('1');   // Envía el carácter '1' por puerto serie (sin salto de línea)
-    delay(250);          // Pausa de 250 milisegundos para evitar dobles pulsaciones (rebotes)
+  // Detección del Botón 1 (Envía '1')
+  if (button1State == LOW && lastButton1State == HIGH) {
+    Serial.print('1');   // Envía '1' por puerto serie
+    delay(250);          // Anti-rebote (Debounce)
   }
-  lastButtonState = buttonState; // Guarda el estado para la próxima lectura
+  lastButton1State = button1State;
+
+  // Detección del Botón 2 (Envía '2')
+  if (button2State == LOW && lastButton2State == HIGH) {
+    Serial.print('2');   // Envía '2' por puerto serie
+    delay(250);          // Anti-rebote (Debounce)
+  }
+  lastButton2State = button2State;
 }
